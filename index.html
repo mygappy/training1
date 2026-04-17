@@ -113,43 +113,6 @@
   .week-note.blue{border-left-color:var(--blue);}
   .week-note.green{border-left-color:var(--green);}
 
-  /* OVERZICHT UITKLAPBARE WEKEN */
-  .ow-week{background:var(--s1);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:10px;}
-  .ow-header{padding:12px 18px;background:var(--s2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-  .ow-toggle{cursor:pointer;user-select:none;transition:background 0.15s;}
-  .ow-toggle:hover{background:var(--s3);}
-  .ow-num{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text3);flex-shrink:0;}
-  .ow-title{font-family:var(--cond);font-size:14px;font-weight:800;letter-spacing:0.5px;color:var(--text);flex:1;}
-  .ow-dates{font-family:var(--mono);font-size:10px;color:var(--text3);}
-  .ow-phase{padding:2px 8px;border-radius:2px;font-family:var(--mono);font-size:8px;font-weight:600;flex-shrink:0;}
-  .ow-chevron{font-family:var(--mono);font-size:10px;color:var(--text3);flex-shrink:0;transition:transform 0.2s;margin-left:auto;}
-  .ow-chevron.open{transform:rotate(90deg);color:var(--accent);}
-
-  .ow-body{display:none;padding:0;}
-  .ow-body.open{display:block;}
-
-  .ow-day-full{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;}
-  .ow-day-full:last-of-type{border-bottom:none;}
-  .ow-day-full.hyrox{border-left:3px solid var(--blue);}
-  .ow-day-full.run{border-left:3px solid var(--accent);}
-  .ow-day-full.kracht{border-left:3px solid var(--yellow);}
-  .ow-day-full.run2{border-left:3px solid var(--accent2);}
-  .ow-day-full.race{border-left:3px solid var(--green);background:rgba(22,128,60,0.02);}
-  .ow-day-full.rust{border-left:3px solid var(--border);opacity:0.6;}
-  .ow-day-header{min-width:200px;flex-shrink:0;}
-  .ow-day-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:3px;}
-  .ow-day-title{font-family:var(--cond);font-size:13px;font-weight:700;color:var(--text);display:block;}
-  .ow-blocks{flex:1;display:flex;gap:8px;flex-wrap:wrap;}
-  .ow-blocks .run-block{flex:1;min-width:180px;margin-bottom:0;}
-  .ow-week-note{padding:12px 18px;background:rgba(0,0,0,0.02);font-size:12px;color:var(--text2);line-height:1.6;border-top:1px solid var(--border);}
-  .ow-week-note b{color:var(--text);}
-  .ow-week-note.blue{border-left:3px solid var(--blue);}
-  .ow-week-note.green{border-left:3px solid var(--green);}
-
-  @media(max-width:700px){
-    .ow-day-full{flex-direction:column;gap:8px;}
-    .ow-day-header{min-width:auto;}
-  }
 
   /* KRACHT */
   .kracht-block{margin-bottom:20px;}
@@ -206,7 +169,6 @@
   .collapse-body{display:none;padding:14px 0 4px;}
   .collapse-body.open{display:block;}
 
-  .all-weeks{display:flex;flex-direction:column;gap:6px;}
   /* ── TRACKER ── */
   .tracker-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;background:var(--s1);border:1px solid var(--border);border-radius:8px;}
   .tracker-label{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
@@ -312,21 +274,18 @@
 </header>
 
 <div class="tabs">
-  <div class="tab on" onclick="showPage('overzicht',this)">Overzicht</div>
+  <div class="tab on" onclick="showPage('tracker',this)">Trainingsschema</div>
   <div class="tab" onclick="showPage('kracht',this)">Krachtsessies</div>
   <div class="tab" onclick="showPage('blessure',this)">Blessureprotocol</div>
-  <div class="tab" onclick="showPage('tracker',this)">📊 Tracker</div>
 </div>
 
-<!-- ═══ OVERZICHT ═══ -->
-<div id="overzicht" class="page on">
+<!-- ═══ TRAININGSSCHEMA ═══ -->
+<div id="tracker" class="page on">
 
-  <!-- DOELEN uitklapbaar -->
+  <!-- DOELEN bovenaan -->
   <div class="collapse-sec" onclick="toggleSec('sec-doelen','chev-doelen')">
-    <div class="collapse-sec-left">
-      <span class="collapse-sec-title">Doelen</span>
-    </div>
-    <span class="collapse-chev" id="chev-doelen">▶</span>
+    <div class="collapse-sec-left"><span class="collapse-sec-title">Doelen</span></div>
+    <span class="collapse-chev open" id="chev-doelen">▶</span>
   </div>
   <div class="collapse-body open" id="sec-doelen">
     <div class="goals">
@@ -345,14 +304,44 @@
     </div>
   </div>
 
-  <!-- FASESTRUCTUUR uitklapbaar -->
-  <div class="collapse-sec" onclick="toggleSec('sec-fases','chev-fases')">
-    <div class="collapse-sec-left">
-      <span class="collapse-sec-title">Fasestructuur</span>
+  <!-- Season + controls -->
+  <div class="tracker-bar">
+    <span class="tracker-label">Seizoen</span>
+    <input class="tracker-season" id="t-season" value="2026 · Hyrox 16 mei + 10km 10 jun" onchange="tRender()">
+    <button class="tbtn" onclick="tExport()">📥 Export JSON</button>
+    <button class="tbtn" onclick="document.getElementById('t-import').click()">📤 Import</button>
+    <input type="file" id="t-import" accept=".json" style="display:none" onchange="tImport(event)">
+    <button class="tbtn danger" onclick="tConfirmClear()">Wis data</button>
+    <span class="saved-chip" id="t-saved">Opgeslagen ✓</span>
+  </div>
+
+  <!-- Progress -->
+  <div class="t-progress-wrap">
+    <div class="t-progress-meta">
+      <span class="t-progress-label">Seizoensvoortgang</span>
+      <span class="t-progress-pct" id="t-ppct">0%</span>
     </div>
+    <div class="t-bar-bg"><div class="t-bar-fill" id="t-pfill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="t-stats">
+    <div class="t-stat"><div class="t-stat-val" id="t-sdone">0</div><div class="t-stat-label">Gedaan</div></div>
+    <div class="t-stat"><div class="t-stat-val" id="t-stot">0</div><div class="t-stat-label">Totaal</div></div>
+    <div class="t-stat"><div class="t-stat-val" id="t-sruns">0</div><div class="t-stat-label">Runs + Hyrox</div></div>
+    <div class="t-stat"><div class="t-stat-val" id="t-skracht">0</div><div class="t-stat-label">Krachtsessies</div></div>
+    <div class="t-stat"><div class="t-stat-val" id="t-sstreak">0</div><div class="t-stat-label">Weken afgerond</div></div>
+  </div>
+
+  <!-- Weeks -->
+  <div id="t-weeks"></div>
+
+  <!-- FASESTRUCTUUR onderaan -->
+  <div class="collapse-sec" onclick="toggleSec('sec-fases','chev-fases')">
+    <div class="collapse-sec-left"><span class="collapse-sec-title">Fasestructuur</span></div>
     <span class="collapse-chev" id="chev-fases">▶</span>
   </div>
-  <div class="collapse-body open" id="sec-fases">
+  <div class="collapse-body" id="sec-fases">
     <div class="timeline">
       <div class="phase p1">
         <div class="phase-num">Fase 1 · 4 weken</div>
@@ -378,11 +367,9 @@
     </div>
   </div>
 
-  <!-- WETENSCHAPPELIJKE ONDERBOUWING uitklapbaar -->
+  <!-- WETENSCHAPPELIJKE ONDERBOUWING onderaan -->
   <div class="collapse-sec" onclick="toggleSec('sec-sci','chev-sci')">
-    <div class="collapse-sec-left">
-      <span class="collapse-sec-title">Wetenschappelijke onderbouwing</span>
-    </div>
+    <div class="collapse-sec-left"><span class="collapse-sec-title">Wetenschappelijke onderbouwing</span></div>
     <span class="collapse-chev" id="chev-sci">▶</span>
   </div>
   <div class="collapse-body" id="sec-sci">
@@ -426,380 +413,7 @@
     </div>
   </div>
 
-  <!-- ALLE WEKEN -->
-  <div class="collapse-sec" onclick="toggleSec('sec-weken','chev-weken')">
-    <div class="collapse-sec-left">
-      <span class="collapse-sec-title">Alle weken</span>
-    </div>
-    <span class="collapse-chev" id="chev-weken">▶</span>
-  </div>
-  <div class="collapse-body open" id="sec-weken">
-    <div class="all-weeks">
-
-    <!-- WEEK 1 -->
-    <div class="ow-week">
-      <div class="ow-header ow-toggle" onclick="toggleWeek('ow1')">
-        <span class="ow-num">Week 1</span>
-        <span class="ow-title">Hyrox Opbouw · Techniek + Snelheid</span>
-        <span class="ow-phase" style="background:rgba(230,57,0,0.1);color:var(--accent);border:1px solid rgba(230,57,0,0.2)">Fase 1</span>
-        <span class="ow-dates">18–24 apr · Kracht A</span>
-        <span class="ow-chevron" id="ow1-chev">▶</span>
-      </div>
-      <div class="ow-body" id="ow1">
-        <div class="ow-day-full hyrox">
-          <div class="ow-day-header"><span class="ow-day-label">Maandag</span><span class="ow-day-title">Hyrox Groepsles</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Loopstukken</div><div class="rb-content">Doel <b>3:45/km</b> · Metronoom 178spm · Techniek boven tempo</div></div></div>
-        </div>
-        <div class="ow-day-full run">
-          <div class="ow-day-header"><span class="ow-day-label">Woensdag</span><span class="ow-day-title">10× 300m Intervals</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 15 min</div><div class="rb-content"><b>10 min easy</b> @ 5:00–5:15/km · 4× A-skips 20m · 4× 60m strides oplopend tot 3:40/km</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 25 min</div><div class="rb-content"><b>10× 300m @ 3:30/km</b> · Herstel: 90 sec rustig lopen · Metronoom 180spm · GCT focus &lt;210ms · Totaal ~3km work</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min easy</b> @ 5:00/km · Kuitstretch muur links 90sec × 2 · Tibialis stretch + enkelmobiliteit</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full kracht">
-          <div class="ow-day-header"><span class="ow-day-label">Donderdag</span><span class="ow-day-title">Krachtsessie A · 60–75 min</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up + Drills · 12 min</div><div class="rb-content">5 min joggen @ 178spm · A-skips 4×20m · B-skips 3×20m · Bounding strides 3×30m · Strides @ 3:40/km 4×60m</div></div>
-            <div class="run-block main"><div class="rb-label">Kracht · 25 min</div><div class="rb-content"><b>Front Squat</b> 4×5 @ ~80% · <b>RDL</b> 4×6 · <b>Bulgarian Split Squat</b> 3×8/been · <b>Hip Thrust</b> 3×10</div></div>
-            <div class="run-block main"><div class="rb-label">Hyrox Circuit · 20 min · 5 rondes</div><div class="rb-content"><b>KB Swing</b> 20 · <b>Push-up</b> 12 · <b>Goblet Squat</b> 15 · <b>Inverted Row</b> 12 · <b>Box Jump</b> 8 — 60 sec rust/ronde</div></div>
-            <div class="run-block cd"><div class="rb-label">Kuit/Enkel Protocol · 10 min (verplicht)</div><div class="rb-content">Single-leg calf raise links 4×15 · Seated calf raise 3×20 · Tibialis raise 3×25 · Balance ogen dicht 3×30sec · Perturbatietraining 3×20sec · Kuitstretch</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full run2">
-          <div class="ow-day-header"><span class="ow-day-label">Zaterdag</span><span class="ow-day-title">Progressieve Run 8km</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 10 min</div><div class="rb-content"><b>10 min easy</b> @ 5:10/km · 3× A-skips · 2× bounding strides 30m</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 35 min</div><div class="rb-content"><b>Km 1–3:</b> 4:30/km · <b>Km 4–6:</b> 4:00/km · <b>Km 7–8:</b> 3:45/km · Metronoom 178spm doorlopend</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min wandelen</b> + licht joggen · Kuitprotocol links: foam roll + stretch · Enkelmobiliteit check</div></div>
-          </div>
-        </div>
-        <div class="ow-week-note">Techniek verankeren op snelheid. 300m intervals kort genoeg voor goede biomechanica. Kuit check na wo — als protesteert: za tempo verlagen naar 4:00/km eindtempo.</div>
-      </div>
-    </div>
-
-    <!-- WEEK 2 -->
-    <div class="ow-week">
-      <div class="ow-header ow-toggle" onclick="toggleWeek('ow2')">
-        <span class="ow-num">Week 2</span>
-        <span class="ow-title">Hyrox Race Simulatie</span>
-        <span class="ow-phase" style="background:rgba(230,57,0,0.1);color:var(--accent);border:1px solid rgba(230,57,0,0.2)">Fase 1</span>
-        <span class="ow-dates">25 apr – 1 mei · Kracht B</span>
-        <span class="ow-chevron" id="ow2-chev">▶</span>
-      </div>
-      <div class="ow-body" id="ow2">
-        <div class="ow-day-full hyrox">
-          <div class="ow-day-header"><span class="ow-day-label">Maandag</span><span class="ow-day-title">Hyrox Groepsles</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Loopstukken</div><div class="rb-content">Doel <b>3:42/km</b> · Metronoom 178spm · Push op stations</div></div></div>
-        </div>
-        <div class="ow-day-full run">
-          <div class="ow-day-header"><span class="ow-day-label">Woensdag</span><span class="ow-day-title">8× 1km Hyrox Simulatie</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 15 min</div><div class="rb-content"><b>10 min easy</b> @ 5:00/km · 4× A-skips + 4× B-skips · 4× 100m strides tot 3:40/km</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 40 min</div><div class="rb-content"><b>8× 1km @ 3:40/km</b> · Herstel: 2 min rustig lopen · Metronoom 178spm · GCT target &lt;205ms · Simuleer Hyrox loopstukken</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min easy</b> @ 5:10/km · Kuitstretch links 90sec × 2 · Foam roll kuit links</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full kracht">
-          <div class="ow-day-header"><span class="ow-day-label">Donderdag</span><span class="ow-day-title">Krachtsessie B · 60–75 min</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up + Activatie · 12 min</div><div class="rb-content">4 min joggen @ 178spm · Lateral Band Walk 2×15 · Glute Bridge + March 2×10 · Jump Squat opbouwend 3×5</div></div>
-            <div class="run-block main"><div class="rb-label">Plyometrie · 20 min</div><div class="rb-content"><b>Depth Drop → Sprint</b> 5×1 · <b>Pogo Jumps</b> 4×20sec · <b>Single-leg Pogo links</b> 3×12sec · <b>Hurdle Hop</b> 4×8 · <b>Nordic Curl</b> 3×5–8</div></div>
-            <div class="run-block main"><div class="rb-label">Kracht Circuit · 20 min · 4 rondes</div><div class="rb-content"><b>Deadlift</b> 6 · <b>Pull-up</b> 8–10 · <b>Reverse Lunge</b> 10/been · <b>Copenhagen Plank</b> 20sec · <b>Single-leg Broad Jump</b> 4/been — 75 sec rust/ronde</div></div>
-            <div class="run-block cd"><div class="rb-label">Kuit/Enkel Protocol · 10 min (verplicht)</div><div class="rb-content">Pogo hops links vermoeid 3×15sec · Single-leg calf raise links 4×15 · Tibialis raise 3×25 · Balance ogen dicht 3×45sec · Perturbatietraining 3×20sec · Kuitstretch</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full run2">
-          <div class="ow-day-header"><span class="ow-day-label">Zaterdag</span><span class="ow-day-title">Tempo Run 10km</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 10 min</div><div class="rb-content"><b>10 min easy</b> @ 5:10/km · A-skips × 3 · 2× 60m strides @ 3:45/km</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 40 min</div><div class="rb-content"><b>Km 1–8: 3:55/km</b> steady · <b>Km 9–10: 3:45/km</b> push · Metronoom 178spm · Negatieve split bewust</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min wandelen</b> + easy joggen · Kuitprotocol links · Enkelmobiliteit check</div></div>
-          </div>
-        </div>
-        <div class="ow-week-note"><b>Kerntest week 2:</b> 8× 1km @ 3:40/km — kunnen biomechanics standhouden? Als 3:40/km niet sustained lukt: terug naar 3:45/km. Niet geforceerd.</div>
-      </div>
-    </div>
-
-    <!-- WEEK 3 -->
-    <div class="ow-week">
-      <div class="ow-header ow-toggle" onclick="toggleWeek('ow3')">
-        <span class="ow-num">Week 3</span>
-        <span class="ow-title">Hyrox Piek · Ladder + Combo</span>
-        <span class="ow-phase" style="background:rgba(230,57,0,0.1);color:var(--accent);border:1px solid rgba(230,57,0,0.2)">Fase 1</span>
-        <span class="ow-dates">2–8 mei · Kracht A (+10%)</span>
-        <span class="ow-chevron" id="ow3-chev">▶</span>
-      </div>
-      <div class="ow-body" id="ow3">
-        <div class="ow-day-full hyrox">
-          <div class="ow-day-header"><span class="ow-day-label">Maandag</span><span class="ow-day-title">Hyrox Groepsles</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Loopstukken</div><div class="rb-content">Doel <b>sub 3:40/km</b> · Maximale focus · Metronoom 178spm</div></div></div>
-        </div>
-        <div class="ow-day-full run">
-          <div class="ow-day-header"><span class="ow-day-label">Woensdag</span><span class="ow-day-title">Ladder Intervals</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 15 min</div><div class="rb-content"><b>10 min easy</b> @ 5:00/km · A-skips × 4 + B-skips × 3 · 4× 80m strides tot 3:35/km</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 30 min</div><div class="rb-content"><b>400m – 800m – 1200m – 800m – 400m</b> · Alles @ 3:35/km · Herstel: gelijke afstand rustig lopen · Metronoom 180spm</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min easy</b> @ 5:15/km · Kuitstretch + foam roll links · Enkelmobiliteit check</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full kracht">
-          <div class="ow-day-header"><span class="ow-day-label">Donderdag</span><span class="ow-day-title">Krachtsessie A (+10% gewicht)</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up + Drills · 12 min</div><div class="rb-content">5 min joggen @ 178spm · A-skips + B-skips · Bounding strides · Strides @ 3:40/km</div></div>
-            <div class="run-block main"><div class="rb-label">Kracht +10% · 25 min</div><div class="rb-content"><b>Front Squat</b> 4×5 (+10%) · <b>RDL</b> 4×6 (+10%) · <b>Bulgarian Split Squat</b> 3×8/been (+10%) · <b>Hip Thrust</b> 3×10 (+10%)</div></div>
-            <div class="run-block main"><div class="rb-label">Hyrox Circuit · 20 min · 5 rondes</div><div class="rb-content"><b>KB Swing</b> 20 · <b>Push-up</b> 12 · <b>Goblet Squat</b> 15 · <b>Inverted Row</b> 12 · <b>Box Jump</b> 8 — 60 sec rust/ronde</div></div>
-            <div class="run-block cd"><div class="rb-label">Kuit/Enkel Protocol · 10 min (verplicht)</div><div class="rb-content">Single-leg calf raise links 4×15 · Seated calf raise 3×20 · Tibialis raise 3×25 · Balance + Perturbatie · Kuitstretch</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full run2">
-          <div class="ow-day-header"><span class="ow-day-label">Zaterdag</span><span class="ow-day-title">Hyrox Combo Run</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 10 min</div><div class="rb-content"><b>10 min easy</b> + drills · Hartslag naar ~130</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 35 min</div><div class="rb-content"><b>4 rondes:</b> Station 2 min (SkiErg / Burpee / Row wisselend) → direct <b>800m @ 3:40/km</b> · Geen rust tussen station en run · Simuleert Hyrox race structuur exact</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min wandelen</b> · Uitgebreid kuitprotocol · Zwaarste week — niet overslaan</div></div>
-          </div>
-        </div>
-        <div class="ow-week-note"><b>Zwaarste week van fase 1.</b> Dagelijks kuitprotocol verplicht. Als kuit na wo significant protesteert: za vervangen door easy 8km.</div>
-      </div>
-    </div>
-
-    <!-- WEEK 4 TAPER HYROX -->
-    <div class="ow-week">
-      <div class="ow-header ow-toggle" onclick="toggleWeek('ow4')">
-        <span class="ow-num">Week 4</span>
-        <span class="ow-title">Hyrox Taper · Race 16 mei</span>
-        <span class="ow-phase" style="background:rgba(29,78,216,0.1);color:var(--blue);border:1px solid rgba(29,78,216,0.2)">Fase 2</span>
-        <span class="ow-dates">9–16 mei · Activatie only</span>
-        <span class="ow-chevron" id="ow4-chev">▶</span>
-      </div>
-      <div class="ow-body" id="ow4">
-        <div class="ow-day-full hyrox">
-          <div class="ow-day-header"><span class="ow-day-label">Maandag 11 mei</span><span class="ow-day-title">Hyrox Groepsles — Laatste zware les</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Loopstukken</div><div class="rb-content">Alles geven op loopstukken · Sub 3:40/km target · Data vastleggen · Stations normaal</div></div></div>
-        </div>
-        <div class="ow-day-full run">
-          <div class="ow-day-header"><span class="ow-day-label">Woensdag 13 mei</span><span class="ow-day-title">5× 400m Activatie</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 12 min</div><div class="rb-content"><b>10 min easy</b> @ 5:00/km · 2× A-skips · 2× strides</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 15 min</div><div class="rb-content"><b>5× 400m @ 3:30/km</b> · Herstel: 2 min volledig · Benen scherp houden · Niet uitputten</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 8 min</div><div class="rb-content"><b>6 min easy wandelen</b> · Kuitstretch links</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full kracht">
-          <div class="ow-day-header"><span class="ow-day-label">Donderdag 14 mei</span><span class="ow-day-title">Kracht Activatie · 45 min max</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Licht</div><div class="rb-content">Alleen mobiliteit + activatie oefeningen · Geen zware compound sets · Lateral band walks · Glute bridges · Kuit/enkel protocol</div></div></div>
-        </div>
-        <div class="ow-day-full race">
-          <div class="ow-day-header"><span class="ow-day-label">Vr 15 mei → Za 16 mei</span><span class="ow-day-title">🏋 HYROX RACE — Sub 55:00</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Race ochtend warm-up</div><div class="rb-content">15 min voor start: <b>5 min rustig joggen</b> · 4× 50m acceleraties oplopend tot race tempo</div></div>
-            <div class="run-block main"><div class="rb-label">Race doel</div><div class="rb-content"><b>Sub 55:00</b> · Loop sub 3:40/km · Stations steady, niet sprinten · Vr: volledig rust · Koolhydraten ophogen do + vr</div></div>
-          </div>
-        </div>
-        <div class="ow-week-note blue">Taper: fitness is er. Nu gaat het om vers op de startlijn staan. Do geen zware kracht. Vr volledig rust.</div>
-      </div>
-    </div>
-
-    <!-- WEEK 5 HERSTEL -->
-    <div class="ow-week">
-      <div class="ow-header ow-toggle" onclick="toggleWeek('ow5')">
-        <span class="ow-num">Week 5</span>
-        <span class="ow-title">Post-Hyrox Herstel</span>
-        <span class="ow-phase" style="background:rgba(29,78,216,0.1);color:var(--blue);border:1px solid rgba(29,78,216,0.2)">Fase 2</span>
-        <span class="ow-dates">17–23 mei · Geen kracht</span>
-        <span class="ow-chevron" id="ow5-chev">▶</span>
-      </div>
-      <div class="ow-body" id="ow5">
-        <div class="ow-day-full hyrox">
-          <div class="ow-day-header"><span class="ow-day-label">Maandag 18 mei</span><span class="ow-day-title">Hyrox Les — 60–70% inspanning</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Post-race week</div><div class="rb-content">Meedoen op <b>60–70%</b> · Geen extra effort · Loopstukken: rustig · Lichaam laten herstellen</div></div></div>
-        </div>
-        <div class="ow-day-full run">
-          <div class="ow-day-header"><span class="ow-day-label">Woensdag 20 mei</span><span class="ow-day-title">Easy Run 5km</span></div>
-          <div class="ow-blocks">
-            <div class="run-block main"><div class="rb-label">Herstelrun</div><div class="rb-content"><b>5km @ 5:00/km</b> · Puur gevoel · Geen data nodig · Kuit feedback check: OK = klaar voor fase 3</div></div>
-            <div class="run-block cd"><div class="rb-label">Na run</div><div class="rb-content">Uitgebreid kuitprotocol links · Extra aandacht post-race</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full rust">
-          <div class="ow-day-header"><span class="ow-day-label">Donderdag 21 mei</span><span class="ow-day-title">Mobiliteit only · 30 min</span></div>
-          <div class="ow-blocks"><div class="run-block cd"><div class="rb-label">Herstel</div><div class="rb-content">Foam rolling gehele lichaam · Stretching · Geen krachtsessie · Kuit prioriteit</div></div></div>
-        </div>
-        <div class="ow-day-full run2">
-          <div class="ow-day-header"><span class="ow-day-label">Zaterdag 23 mei</span><span class="ow-day-title">Test Run 8km</span></div>
-          <div class="ow-blocks">
-            <div class="run-block main"><div class="rb-label">Herstelcheck</div><div class="rb-content"><b>8km @ 4:30–4:45/km</b> · Easy pace · Kuit feedback: OK → start fase 3 maandag</div></div>
-            <div class="run-block cd"><div class="rb-label">Beslissing</div><div class="rb-content">Kuit normaal? → fase 3 start · Kuit pijnlijk? → extra hersteldag inlassen voor fase 3</div></div>
-          </div>
-        </div>
-        <div class="ow-week-note blue">Als kuit na Hyrox significant protesteert, verschuif fase 3 start 3–4 dagen. Blessurevrij starten op 10 juni weegt zwaarder dan elke extra trainingsdag.</div>
-      </div>
-    </div>
-
-    <!-- WEEK 6 FASE 3 W1 -->
-    <div class="ow-week">
-      <div class="ow-header ow-toggle" onclick="toggleWeek('ow6')">
-        <span class="ow-num">Week 6</span>
-        <span class="ow-title">10km Blok · Drempel Opbouw</span>
-        <span class="ow-phase" style="background:rgba(22,128,60,0.1);color:var(--green);border:1px solid rgba(22,128,60,0.2)">Fase 3</span>
-        <span class="ow-dates">24–30 mei · Kracht B</span>
-        <span class="ow-chevron" id="ow6-chev">▶</span>
-      </div>
-      <div class="ow-body" id="ow6">
-        <div class="ow-day-full hyrox">
-          <div class="ow-day-header"><span class="ow-day-label">Maandag 26 mei</span><span class="ow-day-title">Hyrox Groepsles</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Loopstukken</div><div class="rb-content">Doel <b>3:50/km</b> · Iets rustiger dan fase 1 · Stations normaal</div></div></div>
-        </div>
-        <div class="ow-day-full run">
-          <div class="ow-day-header"><span class="ow-day-label">Woensdag 28 mei</span><span class="ow-day-title">3× 2km Drempeltraining</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 15 min</div><div class="rb-content"><b>12 min easy</b> @ 5:00/km · 4× A-skips + 4× B-skips · 3× 80m strides oplopend tot 3:48/km</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 24 min + rust</div><div class="rb-content"><b>3× 2km @ 3:48/km</b> · Herstel: 2 min rustig lopen · Metronoom 178spm · Net onder lactaatdrempel · GCT focus &lt;210ms</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min easy</b> @ 5:10/km · Kuitstretch links 90sec × 2 · Enkelmobiliteit</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full kracht">
-          <div class="ow-day-header"><span class="ow-day-label">Donderdag 29 mei</span><span class="ow-day-title">Krachtsessie B · 60–75 min</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up + Activatie · 12 min</div><div class="rb-content">4 min joggen @ 178spm · Lateral Band Walk 2×15 · Glute Bridge + March · Jump Squat opbouwend 3×5</div></div>
-            <div class="run-block main"><div class="rb-label">Plyometrie · 20 min</div><div class="rb-content"><b>Depth Drop → Sprint</b> 5×1 · <b>Pogo Jumps</b> 4×20sec · <b>Single-leg Pogo links</b> 3×12sec · <b>Hurdle Hop</b> 4×8 · <b>Nordic Curl</b> 3×5–8</div></div>
-            <div class="run-block main"><div class="rb-label">Kracht Circuit · 20 min · 4 rondes</div><div class="rb-content"><b>Deadlift</b> 6 · <b>Pull-up</b> 8–10 · <b>Reverse Lunge</b> 10/been · <b>Copenhagen Plank</b> 20sec · <b>Single-leg Broad Jump</b> 4/been — 75 sec rust/ronde</div></div>
-            <div class="run-block cd"><div class="rb-label">Kuit/Enkel Protocol · 10 min (verplicht)</div><div class="rb-content">Pogo hops links 3×15sec · Single-leg calf raise links 4×15 · Tibialis raise 3×25 · Balance + Perturbatie · Kuitstretch</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full run2">
-          <div class="ow-day-header"><span class="ow-day-label">Zaterdag 31 mei</span><span class="ow-day-title">Long Tempo Run 12km</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 10 min</div><div class="rb-content"><b>10 min easy</b> @ 5:10/km · A-skips × 3 · Strides × 2</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 50 min</div><div class="rb-content"><b>Km 1–4: 4:30/km</b> · <b>Km 5–9: 4:00/km</b> · <b>Km 10–12: 3:50/km</b> · Metronoom 178spm doorlopend</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min wandelen</b> · Uitgebreid kuitprotocol</div></div>
-          </div>
-        </div>
-        <div class="ow-week-note green">Terug naar loopvolume na Hyrox piek. 3:48/km is conservatiever dan race pace — bewust. Kuit check na elke sessie.</div>
-      </div>
-    </div>
-
-    <!-- WEEK 7 FASE 3 W2 -->
-    <div class="ow-week">
-      <div class="ow-header ow-toggle" onclick="toggleWeek('ow7')">
-        <span class="ow-num">Week 7</span>
-        <span class="ow-title">10km Blok · Race Simulatie</span>
-        <span class="ow-phase" style="background:rgba(22,128,60,0.1);color:var(--green);border:1px solid rgba(22,128,60,0.2)">Fase 3</span>
-        <span class="ow-dates">31 mei – 6 jun · Kracht A</span>
-        <span class="ow-chevron" id="ow7-chev">▶</span>
-      </div>
-      <div class="ow-body" id="ow7">
-        <div class="ow-day-full hyrox">
-          <div class="ow-day-header"><span class="ow-day-label">Maandag 2 jun</span><span class="ow-day-title">Hyrox Groepsles</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Loopstukken</div><div class="rb-content">Doel <b>3:45/km</b> · Techniek prioriteit · GCT meten na les</div></div></div>
-        </div>
-        <div class="ow-day-full run">
-          <div class="ow-day-header"><span class="ow-day-label">Woensdag 4 jun</span><span class="ow-day-title">8km Race Simulatie</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 15 min</div><div class="rb-content"><b>12 min easy</b> @ 5:00/km · 4× A-skips + B-skips · 4× 80m strides tot 3:41/km</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 30 min</div><div class="rb-content"><b>8km negatieve split:</b> · Km 1–2: 3:44/km · Km 3–6: 3:41/km · Km 7–8: 3:38/km push · Metronoom 180spm · GCT &lt;205ms</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min easy</b> @ 5:10/km · Kuitstretch + foam roll links · Enkelmobiliteit</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full kracht">
-          <div class="ow-day-header"><span class="ow-day-label">Donderdag 5 jun</span><span class="ow-day-title">Krachtsessie A · 60–75 min</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up + Drills · 12 min</div><div class="rb-content">5 min joggen @ 178spm · A-skips 4×20m · B-skips 3×20m · Bounding strides · Strides @ 3:40/km</div></div>
-            <div class="run-block main"><div class="rb-label">Kracht · 25 min</div><div class="rb-content"><b>Front Squat</b> 4×5 · <b>RDL</b> 4×6 · <b>Bulgarian Split Squat</b> 3×8/been · <b>Hip Thrust</b> 3×10</div></div>
-            <div class="run-block main"><div class="rb-label">Hyrox Circuit · 20 min · 5 rondes</div><div class="rb-content"><b>KB Swing</b> 20 · <b>Push-up</b> 12 · <b>Goblet Squat</b> 15 · <b>Inverted Row</b> 12 · <b>Box Jump</b> 8 — 60 sec rust/ronde</div></div>
-            <div class="run-block cd"><div class="rb-label">Kuit/Enkel Protocol · 10 min (verplicht)</div><div class="rb-content">Single-leg calf raise links 4×15 · Seated calf raise 3×20 · Tibialis raise 3×25 · Balance + Perturbatie · Kuitstretch</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full run2">
-          <div class="ow-day-header"><span class="ow-day-label">Zaterdag 7 jun</span><span class="ow-day-title">Long Run 14km</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warming-up · 10 min</div><div class="rb-content"><b>10 min easy</b> + drills · 2× strides @ 3:45/km</div></div>
-            <div class="run-block main"><div class="rb-label">Hoofdwerk · 60 min</div><div class="rb-content"><b>Km 1–10: 4:20/km</b> · <b>Km 11–14: 3:45/km</b> push · Metronoom 178spm · Finish hard = race fatigue simulatie</div></div>
-            <div class="run-block cd"><div class="rb-label">Cooling-down · 10 min</div><div class="rb-content"><b>8 min easy wandelen</b> · Extra kuitprotocol na langere sessie</div></div>
-          </div>
-        </div>
-        <div class="ow-week-note green"><b>Kritische test wo 4 jun:</b> 8km @ 3:41/km sustained — als dit lukt, is sub-37 bijna zeker. Als niet: begin op 3:44/km.</div>
-      </div>
-    </div>
-
-    <!-- WEEK 8 TAPER 10KM -->
-    <div class="ow-week">
-      <div class="ow-header ow-toggle" onclick="toggleWeek('ow8')">
-        <span class="ow-num">Week 8</span>
-        <span class="ow-title">10km Taper · Race 10 juni</span>
-        <span class="ow-phase" style="background:rgba(22,128,60,0.1);color:var(--green);border:1px solid rgba(22,128,60,0.2)">Fase 3</span>
-        <span class="ow-dates">8–10 jun · Geen kracht</span>
-        <span class="ow-chevron" id="ow8-chev">▶</span>
-      </div>
-      <div class="ow-body" id="ow8">
-        <div class="ow-day-full hyrox">
-          <div class="ow-day-header"><span class="ow-day-label">Maandag 8 jun</span><span class="ow-day-title">Hyrox Les — 70% inspanning</span></div>
-          <div class="ow-blocks"><div class="run-block main"><div class="rb-label">Taper</div><div class="rb-content">Bijwonen op <b>70%</b> · Geen extra effort · Benen sparen voor race woensdag</div></div></div>
-        </div>
-        <div class="ow-day-full run">
-          <div class="ow-day-header"><span class="ow-day-label">Dinsdag 9 jun</span><span class="ow-day-title">Pre-race Activatie</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Activatie · 25 min totaal</div><div class="rb-content"><b>4km easy</b> @ 5:00/km · 4× 100m strides oplopend · Laatste stride: 3:35/km · Benen wakker, niet uitputten</div></div>
-            <div class="run-block cd"><div class="rb-label">Na activatie</div><div class="rb-content">Kuitstretch links · Enkelmobiliteit · Vroeg naar bed</div></div>
-          </div>
-        </div>
-        <div class="ow-day-full race">
-          <div class="ow-day-header"><span class="ow-day-label">Woensdag 10 jun</span><span class="ow-day-title">🏃 10km RACE — Sub 37:00</span></div>
-          <div class="ow-blocks">
-            <div class="run-block wu"><div class="rb-label">Warm-up · 15 min voor start</div><div class="rb-content"><b>8 min rustig joggen</b> · 4× 80m acceleraties · Laatste tot 3:41/km · Metronoom controleren</div></div>
-            <div class="run-block main"><div class="rb-label">Race pacing</div><div class="rb-content"><b>Km 1–2: 3:44/km</b> (conservatief) · <b>Km 3–7: 3:41/km</b> (race pace) · <b>Km 8–9: 3:38/km</b> (push) · <b>Km 10: alles geven</b> · Doel: <b>sub 37:00</b></div></div>
-          </div>
-        </div>
-        <div class="ow-day-full rust">
-          <div class="ow-day-header"><span class="ow-day-label">Donderdag 11 jun</span><span class="ow-day-title">Rust — Post-race</span></div>
-          <div class="ow-blocks"><div class="run-block cd"><div class="rb-label">Herstel</div><div class="rb-content">Volledig rust · Foam rolling kuit · Geen training · Reflecteer op race data</div></div></div>
-        </div>
-        <div class="ow-week-note green">Dinsdag is geen training — het is een knipper. Begin bewust op 3:44/km, niet 3:41/km. Te snel starten km 1–2 is de meest voorkomende manier om sub-37 te missen.</div>
-      </div>
-    </div>
-
-  </div><!-- /all-weeks -->
-  </div><!-- /collapse-body sec-weken -->
-</div><!-- /overzicht page -->
-
-<!-- ═══ TRACKER ═══ -->
-<div id="tracker" class="page">
-
-  <!-- Season + controls -->
-  <div class="tracker-bar">
-    <span class="tracker-label">Seizoen</span>
-    <input class="tracker-season" id="t-season" value="2026 · Hyrox 16 mei + 10km 10 jun" onchange="tRender()">
-    <button class="tbtn" onclick="tExport()">📥 Export JSON</button>
-    <button class="tbtn" onclick="document.getElementById('t-import').click()">📤 Import</button>
-    <input type="file" id="t-import" accept=".json" style="display:none" onchange="tImport(event)">
-    <button class="tbtn danger" onclick="tConfirmClear()">Wis data</button>
-    <span class="saved-chip" id="t-saved">Opgeslagen ✓</span>
-  </div>
-
-  <!-- Progress -->
-  <div class="t-progress-wrap">
-    <div class="t-progress-meta">
-      <span class="t-progress-label">Seizoensvoortgang</span>
-      <span class="t-progress-pct" id="t-ppct">0%</span>
-    </div>
-    <div class="t-bar-bg"><div class="t-bar-fill" id="t-pfill" style="width:0%"></div></div>
-  </div>
-
-  <!-- Stats -->
-  <div class="t-stats">
-    <div class="t-stat"><div class="t-stat-val" id="t-sdone">0</div><div class="t-stat-label">Gedaan</div></div>
-    <div class="t-stat"><div class="t-stat-val" id="t-stot">0</div><div class="t-stat-label">Totaal</div></div>
-    <div class="t-stat"><div class="t-stat-val" id="t-sruns">0</div><div class="t-stat-label">Runs + Hyrox</div></div>
-    <div class="t-stat"><div class="t-stat-val" id="t-skracht">0</div><div class="t-stat-label">Krachtsessies</div></div>
-    <div class="t-stat"><div class="t-stat-val" id="t-sstreak">0</div><div class="t-stat-label">Weken afgerond</div></div>
-  </div>
-
-  <!-- Weeks -->
-  <div id="t-weeks"></div>
-
-  <!-- Modal overlay voor confirm -->
+  <!-- Modal -->
   <div class="t-modal-overlay" id="t-modal">
     <div class="t-modal">
       <h3>Data wissen?</h3>
@@ -1345,7 +959,12 @@ function tConfirmClear(){
     {localStorage.removeItem(tKey());tRender();}
 }
 
-document.addEventListener('DOMContentLoaded',tRender);
+document.addEventListener('DOMContentLoaded', () => {
+  tRender();
+  // Ensure first tab is visually active
+  const firstTab = document.querySelector('.tab');
+  if(firstTab) firstTab.classList.add('on');
+});
 
 function toggleSec(id, chevId){
   const body=document.getElementById(id);
@@ -1354,13 +973,7 @@ function toggleSec(id, chevId){
   body.classList.toggle('open',!isOpen);
   chev.classList.toggle('open',!isOpen);
 }
-function toggleWeek(id){
-  const body=document.getElementById(id);
-  const chev=document.getElementById(id+'-chev');
-  const isOpen=body.classList.contains('open');
-  body.classList.toggle('open',!isOpen);
-  chev.classList.toggle('open',!isOpen);
-}
+
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
